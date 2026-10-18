@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Spoiled Lungz Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,900&family=Manrope:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: working back-office — same plum/gold tokens as the site, calmer surfaces, list + editor */
+:root{
+  --bg:#160a20; --surface:#22113a; --surface-2:#2d1749; --line:#3f2560;
+  --fg:#fbf4ff; --muted:#c9b6dc; --gold:#f6c744; --gold-deep:#d4951c; --pink:#ff4f9a; --lime:#a3e35f;
+  --display:"Fraunces", Georgia, serif; --body:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:env(safe-area-inset-top,0px) 40px}
+h1,h2{font-family:var(--display);font-style:italic;font-weight:900;margin:0;line-height:1.1}
+img{max-width:100%;display:block}
+.shell{max-width:1200px;margin:0 auto}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:800 .9rem/1 var(--body);padding:12px 18px;border-radius:999px;border:1px solid transparent;cursor:pointer;color:var(--fg);background:var(--surface-2);text-decoration:none}
+.btn:hover{border-color:var(--muted)}
+.btn-gold{background:linear-gradient(180deg,#ffe07a,var(--gold) 45%,var(--gold-deep));color:#2a1300}
+.btn-danger{background:transparent;border-color:var(--pink);color:var(--pink)}
+.btn-link{background:none;padding:8px 10px;color:var(--muted)}
+button[disabled]{opacity:.6;cursor:wait}
+label{display:grid;gap:6px;font-weight:700;font-size:.85rem}
+input,select,textarea{font:500 .95rem var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+textarea{min-height:110px;resize:vertical}
+.hint{color:var(--muted);font-weight:500;font-size:.8rem}
+.check{display:flex;align-items:center;gap:10px;font-weight:700}
+.check input{width:20px;height:20px;accent-color:var(--gold)}
+
+/* login */
+.login{max-width:400px;margin:12vh auto 0;display:grid;gap:18px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px}
+.login img{width:220px}
+.err{color:var(--pink);font-weight:700;min-height:1.2em}
+.ok{color:var(--lime);font-weight:700}
+
+/* app */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.bar-left{display:flex;align-items:center;gap:14px}
+.bar img{height:22px;width:auto}
+.bar .who{color:var(--muted);font-size:.85rem}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.tab{background:var(--surface);border:1px solid var(--line);color:var(--muted);font:700 .9rem/1 var(--body);padding:11px 16px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--gold);color:#2a1300;border-color:var(--gold)}
+.tab .count{margin-left:6px;opacity:.75}
+.work{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:900px){.work{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters select{width:auto}
+.list{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px;border-radius:12px;border:1px solid transparent;background:var(--bg);cursor:pointer;text-align:left;color:var(--fg);font:inherit;width:100%}
+.row:hover{border-color:var(--line)}
+.row.sel{border-color:var(--gold)}
+.thumb{width:56px;height:56px;border-radius:10px;object-fit:cover;background:var(--surface-2)}
+.row-main{min-width:0}
+.row-main strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-main span{color:var(--muted);font-size:.82rem}
+.chip{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.chip.live{color:var(--lime)}
+.chip.new{color:var(--pink)}
+.empty{color:var(--muted);padding:26px 10px;text-align:center}
+form.editor{display:grid;gap:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+.preview{width:100%;max-width:220px;aspect-ratio:1/1;object-fit:cover;border-radius:12px;background:var(--surface-2)}
+.locs-pick{display:grid;gap:8px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--pink);font-weight:700}
+.msg{background:var(--bg);border-radius:12px;padding:14px;display:grid;gap:6px}
+.msg header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.msg .meta{color:var(--muted);font-size:.8rem}
+.msg p{margin:0;white-space:pre-wrap}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--lime);color:#17210a;font-weight:800;padding:12px 18px;border-radius:999px;z-index:20}
+.toast.bad{background:var(--pink);color:#fff}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- Login -->
+  <section class="login" id="login" hidden>
+    <img src="assets/wordmark.png" alt="Spoiled Lungz">
+    <h1>Admin sign in</h1>
+    <form id="login-form" style="display:grid;gap:14px">
+      <label for="li-email">Email<input id="li-email" type="email" autocomplete="username" required></label>
+      <label for="li-pass">Password<input id="li-pass" type="password" autocomplete="current-password" required></label>
+      <button class="btn btn-gold" type="submit">Sign in</button>
+      <p class="err" id="login-err" role="alert"></p>
+    </form>
+  </section>
+
+  <section class="login" id="noconfig" hidden>
+    <h1>Not connected yet</h1>
+    <p class="hint">Add the Supabase URL and publishable key to config.js, then reload this page.</p>
+  </section>
+
+  <!-- App -->
+  <section id="app" hidden>
+    <div class="bar">
+      <div class="bar-left"><img src="assets/wordmark.png" alt="Spoiled Lungz"><h2 style="font-size:1.2rem">Admin</h2></div>
+      <div class="bar-left"><span class="who" id="who"></span><a class="btn btn-link" href="/" target="_blank" rel="noopener">View site</a><button class="btn" id="signout" type="button">Sign out</button></div>
+    </div>
+    <p class="err" id="not-admin" hidden>This account isn't on the admin list, so changes won't save. Ask the site manager to add your email.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-t="products">Products<span class="count" id="c-products"></span></button>
+      <button class="tab" role="tab" data-t="merch">Merch<span class="count" id="c-merch"></span></button>
+      <button class="tab" role="tab" data-t="locations">Locations<span class="count" id="c-locations"></span></button>
+      <button class="tab" role="tab" data-t="messages">Messages<span class="count" id="c-messages"></span></button>
+    </div>
+
+    <div class="work" id="work">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="filters" id="filters"></div>
+          <button class="btn btn-gold" id="add" type="button">+ Add new</button>
+        </div>
+        <div class="list" id="list"></div>
+      </div>
+      <div class="panel" id="editor-panel">
+        <div id="editor"><p class="empty">Pick an item to edit, or add a new one.</p></div>
+      </div>
+    </div>
+
+    <div class="panel" id="messages-panel" hidden><div class="list" id="messages"></div></div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
