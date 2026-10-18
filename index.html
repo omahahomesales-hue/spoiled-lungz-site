@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Spoiled Lungz</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Spoiled Lungz — uncompromising quality, unmistakable branding, and a community that shapes the culture. Find us at Omaha boutiques. 21+ only.">
@@ -5,6 +10,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,700;1,9..144,900&family=Manrope:wght@400;500;700;800&display=swap">
 <style>
+[hidden]{display:none!important}
+html,body{margin:0}
 /* Layout: dark candy-boutique — plum velvet ground, gold drip dividers, candy accents used sparingly, tabbed single page */
 :root{
   --bg:#160a20; --surface:#22113a; --surface-2:#2d1749; --line:#3f2560;
@@ -188,6 +195,8 @@ footer{border-top:1px solid var(--line);background:#120819}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 button[disabled]{opacity:.6;cursor:wait}
 </style>
+</head>
+<body>
 
 <!-- ============ AGE GATE ============ -->
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
@@ -391,3 +400,5 @@ button[disabled]{opacity:.6;cursor:wait}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
 <script src="js/site.js"></script>
+</body>
+</html>
