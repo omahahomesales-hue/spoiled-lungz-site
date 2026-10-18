@@ -25,7 +25,40 @@
   });
   $("signout").addEventListener("click", function(){ sb.auth.signOut().then(function(){ location.reload(); }); });
 
-  sb.auth.getSession().then(function(r){ if(r.data.session) boot(r.data.session); else $("login").hidden=false; });
+  $("forgot").addEventListener("click", function(){
+    var email=$("li-email").value.trim();
+    $("login-err").textContent=""; $("login-ok").hidden=true;
+    if(!email){ $("login-err").textContent="Type your email above first, then click Forgot password."; return; }
+    var btn=this; btn.disabled=true;
+    sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + "/admin" }).then(function(r){
+      btn.disabled=false;
+      if(r.error){ $("login-err").textContent = /rate|seconds/i.test(r.error.message) ? "Too many reset emails. Wait a few minutes and try again." : r.error.message; return; }
+      $("login-ok").hidden=false; $("login-ok").textContent="Check your email for a reset link. It opens this page so you can pick a new password.";
+    });
+  });
+
+  var recovering = /type=recovery/.test(location.hash);
+  function showSetPass(){ recovering=true; $("login").hidden=true; $("app").hidden=true; $("setpass").hidden=false; $("sp-pass").focus(); }
+  sb.auth.onAuthStateChange(function(event){ if(event==="PASSWORD_RECOVERY") showSetPass(); });
+  $("setpass-form").addEventListener("submit", function(e){
+    e.preventDefault(); $("setpass-err").textContent="";
+    var p1=$("sp-pass").value, p2=$("sp-pass2").value;
+    if(p1.length<8){ $("setpass-err").textContent="Use at least 8 characters."; return; }
+    if(p1!==p2){ $("setpass-err").textContent="The two passwords don't match."; return; }
+    var btn=e.target.querySelector("button"); btn.disabled=true;
+    sb.auth.updateUser({ password:p1 }).then(function(r){
+      btn.disabled=false;
+      if(r.error){ $("setpass-err").textContent = /expired|invalid|session/i.test(r.error.message) ? "This reset link has expired. Go back to sign in and click Forgot password again." : r.error.message; return; }
+      try{ history.replaceState(null,"",location.pathname); }catch(_){}
+      recovering=false; $("setpass").hidden=true; toast("Password saved");
+      sb.auth.getSession().then(function(s){ if(s.data.session) boot(s.data.session); else $("login").hidden=false; });
+    });
+  });
+
+  sb.auth.getSession().then(function(r){
+    if(recovering){ if(r.data.session) showSetPass(); else { $("login").hidden=false; $("login-err").textContent="This reset link has expired. Click Forgot password to get a new one."; } return; }
+    if(r.data.session) boot(r.data.session); else $("login").hidden=false;
+  });
 
   function boot(session){
     $("login").hidden=true; $("app").hidden=false;

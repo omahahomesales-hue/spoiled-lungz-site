@@ -97,7 +97,20 @@ form.editor{display:grid;gap:14px}
       <label for="li-email">Email<input id="li-email" type="email" autocomplete="username" required></label>
       <label for="li-pass">Password<input id="li-pass" type="password" autocomplete="current-password" required></label>
       <button class="btn btn-gold" type="submit">Sign in</button>
+      <button class="btn btn-link" type="button" id="forgot" style="justify-self:start;padding-left:0">Forgot password?</button>
       <p class="err" id="login-err" role="alert"></p>
+      <p class="ok" id="login-ok" role="status" hidden></p>
+    </form>
+  </section>
+
+  <section class="login" id="setpass" hidden>
+    <img src="assets/wordmark.png" alt="Spoiled Lungz">
+    <h1>Set a new password</h1>
+    <form id="setpass-form" style="display:grid;gap:14px">
+      <label for="sp-pass">New password <span class="hint">At least 8 characters</span><input id="sp-pass" type="password" autocomplete="new-password" minlength="8" required></label>
+      <label for="sp-pass2">Confirm new password<input id="sp-pass2" type="password" autocomplete="new-password" minlength="8" required></label>
+      <button class="btn btn-gold" type="submit">Save password and sign in</button>
+      <p class="err" id="setpass-err" role="alert"></p>
     </form>
   </section>
 
