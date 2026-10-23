@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>Spoiled Lungz Admin</title>
+<link rel="icon" type="image/svg+xml" href="assets/logo-circle.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@1,900&family=Manrope:wght@400;500;700;800&display=swap">
@@ -40,14 +41,14 @@ textarea{min-height:110px;resize:vertical}
 
 /* login */
 .login{max-width:400px;margin:12vh auto 0;display:grid;gap:18px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px}
-.login img{width:220px}
+.login img{width:96px;height:96px;border-radius:50%;box-shadow:0 0 0 3px var(--gold)}
 .err{color:var(--pink);font-weight:700;min-height:1.2em}
 .ok{color:var(--lime);font-weight:700}
 
 /* app */
 .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:22px}
 .bar-left{display:flex;align-items:center;gap:14px}
-.bar img{height:22px;width:auto}
+.bar img{height:40px;width:40px;border-radius:50%;box-shadow:0 0 0 2px var(--gold)}
 .bar .who{color:var(--muted);font-size:.85rem}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
 .tab{background:var(--surface);border:1px solid var(--line);color:var(--muted);font:700 .9rem/1 var(--body);padding:11px 16px;border-radius:999px;cursor:pointer}
@@ -91,7 +92,7 @@ form.editor{display:grid;gap:14px}
 
   <!-- Login -->
   <section class="login" id="login" hidden>
-    <img src="assets/wordmark.png" alt="Spoiled Lungz">
+    <img src="assets/logo-circle.svg" alt="Spoiled Lungz">
     <h1>Admin sign in</h1>
     <form id="login-form" style="display:grid;gap:14px">
       <label for="li-email">Email<input id="li-email" type="email" autocomplete="username" required></label>
@@ -104,7 +105,7 @@ form.editor{display:grid;gap:14px}
   </section>
 
   <section class="login" id="setpass" hidden>
-    <img src="assets/wordmark.png" alt="Spoiled Lungz">
+    <img src="assets/logo-circle.svg" alt="Spoiled Lungz">
     <h1>Set a new password</h1>
     <form id="setpass-form" style="display:grid;gap:14px">
       <label for="sp-pass">New password <span class="hint">At least 8 characters</span><input id="sp-pass" type="password" autocomplete="new-password" minlength="8" required></label>
@@ -122,7 +123,7 @@ form.editor{display:grid;gap:14px}
   <!-- App -->
   <section id="app" hidden>
     <div class="bar">
-      <div class="bar-left"><img src="assets/wordmark.png" alt="Spoiled Lungz"><h2 style="font-size:1.2rem">Admin</h2></div>
+      <div class="bar-left"><img src="assets/logo-circle.svg" alt="Spoiled Lungz"><h2 style="font-size:1.2rem">Admin</h2></div>
       <div class="bar-left"><span class="who" id="who"></span><a class="btn btn-link" href="/" target="_blank" rel="noopener">View site</a><button class="btn" id="signout" type="button">Sign out</button></div>
     </div>
     <p class="err" id="not-admin" hidden>This account isn't on the admin list, so changes won't save. Ask the site manager to add your email.</p>
