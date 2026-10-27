@@ -17,3 +17,10 @@ Static site (no build step) deployed on Vercel, with content in Supabase.
 
 ## Deploy
 Push to GitHub, then import the repo in Vercel. Use framework preset "Other" with no build command. Every push to `main` redeploys the site.
+
+## Members, orders & delivery (added Oct 2026)
+- **Members tab** (`#members`): people apply (21+ date of birth enforced by the database), then wait as *pending* until an admin approves them in `/admin → Members`. Approved members see prices, members-only products, and can order for delivery or pickup. Payment is collected at handoff for now.
+- **Admin → Orders**: confirm, mark out for delivery / ready for pickup / completed, cancel (stock goes back automatically), assign a driver, mark paid.
+- **Admin → Staff & drivers**: add drivers (they only see deliveries assigned to them at `/admin`) or other admins.
+- **Products**: member price (blank = not orderable), stock (blank = not tracked), members-only switch.
+- Database rules live in `supabase/002_members_orders.sql`. Prices and stock are enforced in the database (`place_order`), not the browser.

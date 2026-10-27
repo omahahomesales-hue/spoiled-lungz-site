@@ -85,6 +85,23 @@ form.editor{display:grid;gap:14px}
 .msg p{margin:0;white-space:pre-wrap}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--lime);color:#17210a;font-weight:800;padding:12px 18px;border-radius:999px;z-index:20}
 .toast.bad{background:var(--pink);color:#fff}
+
+.tab .count.hot{background:var(--pink);color:#fff;opacity:1;padding:2px 7px;border-radius:999px;margin-left:6px}
+.chip.pending,.chip.new-order{color:var(--gold)}
+.chip.denied,.chip.revoked,.chip.cancelled{color:var(--muted);text-decoration:line-through}
+.chip.out{color:var(--pink)}
+.chip.ready,.chip.confirmed{color:#4cc3ff}
+.chip.done,.chip.approved{color:var(--lime)}
+.kv{display:grid;grid-template-columns:120px minmax(0,1fr);gap:8px 14px;font-size:.92rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;overflow-wrap:anywhere}
+.idphoto{max-width:100%;max-height:340px;border-radius:12px;border:1px solid var(--line);object-fit:contain;background:var(--bg)}
+.items{width:100%;border-collapse:collapse;font-size:.92rem}
+.items td{padding:8px 0;border-bottom:1px solid var(--line)}
+.items td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.items tr:last-child td{border-bottom:0;font-weight:800}
+.btn-sm{padding:9px 14px;font-size:.85rem}
+.section-label{font-weight:800;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:6px}
 </style>
 </head>
 <body>
@@ -129,10 +146,13 @@ form.editor{display:grid;gap:14px}
     <p class="err" id="not-admin" hidden>This account isn't on the admin list, so changes won't save. Ask the site manager to add your email.</p>
 
     <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-t="orders">Orders<span class="count" id="c-orders"></span></button>
+      <button class="tab" role="tab" data-t="members">Members<span class="count" id="c-members"></span></button>
       <button class="tab" role="tab" data-t="products">Products<span class="count" id="c-products"></span></button>
       <button class="tab" role="tab" data-t="merch">Merch<span class="count" id="c-merch"></span></button>
       <button class="tab" role="tab" data-t="locations">Locations<span class="count" id="c-locations"></span></button>
       <button class="tab" role="tab" data-t="messages">Messages<span class="count" id="c-messages"></span></button>
+      <button class="tab" role="tab" data-t="staff">Staff &amp; drivers</button>
     </div>
 
     <div class="work" id="work">

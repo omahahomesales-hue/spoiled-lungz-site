@@ -2,6 +2,7 @@
   "use strict";
   var cfg = window.SL_CONFIG || {};
   var sb = (cfg.supabaseUrl && cfg.supabaseKey && window.supabase) ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey) : null;
+  window.SL_SB = sb;
 
   /* ---------- Fallback content (used until Supabase is connected) ---------- */
   var FALLBACK = {
@@ -66,7 +67,7 @@
   function productCard(p, c){
     var img = safeUrl(p.image_url) ? '<img class="card-img" src="'+esc(p.image_url)+'" alt="'+esc(p.name)+'" loading="lazy">' : '<div class="ph">Product photo<br>coming soon</div>';
     var where = (p.available_at||[]).map(locName).filter(Boolean);
-    return '<article class="card">'+(p.is_new?'<span class="badge">New drop</span>':'')+img+
+    return '<article class="card">'+(p.members_only?'<span class="badge badge-members">Members only</span>':p.is_new?'<span class="badge">New drop</span>':'')+img+
       '<div class="card-body"><strong>'+esc(p.name)+'</strong>'+(p.subtitle?'<span class="sub">'+esc(p.subtitle)+'</span>':'')+
       (p.description?'<p class="desc">'+esc(p.description)+'</p>':'')+
       '<span class="where">'+(where.length? 'At '+where.map(esc).join(' · ') : c.label+' · Available in store')+'</span></div></article>';
@@ -97,7 +98,7 @@
   }
 
   /* ---------- Routing ---------- */
-  var PAGES=["home","products","merch","locations","about","contact"];
+  var PAGES=["home","products","merch","locations","about","members","contact"];
   function go(page, cat, push){
     if(PAGES.indexOf(page)<0) page="home";
     document.querySelectorAll("section.page").forEach(function(s){ s.hidden = s.dataset.page!==page; });
@@ -106,13 +107,16 @@
     var active=document.querySelector('.tab[aria-current="page"]'); if(active&&active.scrollIntoView) active.scrollIntoView({block:"nearest",inline:"nearest"});
     window.scrollTo(0,0);
     if(push!==false){ try{ history.replaceState(null,"","#"+(page==="products"&&cat?cat:page)); }catch(e){} }
+    try{ document.dispatchEvent(new CustomEvent("sl:page",{detail:page})); }catch(e){}
   }
+  window.SL_GO = go;
   document.addEventListener("click",function(e){
     var el=e.target.closest("[data-go]"); if(!el) return;
     e.preventDefault(); go(el.dataset.go, el.dataset.cat);
   });
   function fromHash(){
     var h=(location.hash||"").replace("#","");
+    if(/access_token|error_description|type=/.test(h)) return;
     if(CATS[h]) go("products",h,false); else go(h||"home",null,false);
   }
   window.addEventListener("hashchange",fromHash);
@@ -121,7 +125,8 @@
   renderAll();
 
   /* ---------- Load live content ---------- */
-  if(sb){
+  function loadLive(){
+    if(!sb) return;
     Promise.all([
       sb.from("locations").select("*").eq("published",true).order("sort").order("created_at"),
       sb.from("products").select("*").eq("published",true).order("sort").order("created_at",{ascending:false}),
@@ -133,6 +138,8 @@
       renderAll();
     }).catch(function(){ /* keep fallback content */ });
   }
+  window.SL_RELOAD = loadLive;
+  loadLive();
 
   /* ---------- Age gate ---------- */
   var gate=document.getElementById("gate"), KEY="sl_age_ok";
