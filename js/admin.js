@@ -47,7 +47,7 @@
   });
 
   var recovering = /type=recovery/.test(location.hash);
-  function showSetPass(){ recovering=true; $("login").hidden=true; $("app").hidden=true; $("setpass").hidden=false; $("sp-pass").focus(); }
+  function showSetPass(){ recovering=true; settled=true; $("booting").hidden=true; $("login").hidden=true; $("app").hidden=true; $("setpass").hidden=false; $("sp-pass").focus(); }
   sb.auth.onAuthStateChange(function(event){ if(event==="PASSWORD_RECOVERY") showSetPass(); });
   $("setpass-form").addEventListener("submit", function(e){
     e.preventDefault(); $("setpass-err").textContent="";
@@ -64,13 +64,19 @@
     });
   });
 
+  // Never leave a blank page: if sign-in hasn't settled in 8 seconds, show the login with a hint.
+  var settled=false;
+  function showLogin(msg){ settled=true; $("booting").hidden=true; $("setpass").hidden=true; $("app").hidden=true; $("login").hidden=false; if(msg) $("login-err").textContent=msg; }
+  setTimeout(function(){ if(!settled) showLogin(recovering ? "That reset link didn't go through. It may have expired or already been used. Type your email and click Forgot password for a new one." : "Sign-in is taking too long. Check your connection and refresh."); }, 8000);
+  if(/error_description/.test(location.hash)){ try{ history.replaceState(null,"",location.pathname); }catch(_){} recovering=false; showLogin("That link has expired or was already used. Type your email and click Forgot password for a new one."); }
   sb.auth.getSession().then(function(r){
+    settled=true; $("booting").hidden=true;
     if(recovering){ if(r.data.session) showSetPass(); else { $("login").hidden=false; $("login-err").textContent="This reset link has expired. Click Forgot password to get a new one."; } return; }
     if(r.data.session) boot(r.data.session); else $("login").hidden=false;
   });
 
   function boot(session){
-    $("login").hidden=true; $("app").hidden=false;
+    settled=true; $("booting").hidden=true; $("login").hidden=true; $("app").hidden=false;
     state.email=(session.user.email||"").toLowerCase();
     $("who").textContent=session.user.email;
     sb.rpc("my_staff_role").then(function(r){
